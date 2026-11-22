@@ -12,6 +12,22 @@ sys.argv, _argv = [sys.argv[0]], sys.argv
 spec = importlib.util.spec_from_file_location("mv", HERE + "/make_video.py")
 mv = importlib.util.module_from_spec(spec); spec.loader.exec_module(mv)
 sys.argv = _argv
+# skenario seri A vs B: key -> (kalimat pembuka, balasan A, balasan B, lanjutan B, label A, label B, penutup baris-2)
+SCN = {
+ "chat": ("Chat aku belum kamu balas.", "Aku kan sibuk.", "Maaf, aku bales sekarang.", "Makasih udah bilang.", "MENGELAK", "MENGAKUI", "BEDA CARA MENANGGAPINYA."),
+ "cemburu": ("Aku cemburu sama dia.", "Kamu berlebihan.", "Makasih udah jujur.", "Aku jelasin ya.", "MEREMEHKAN", "MENJELASKAN", "BEDA CARA MENJELASKANNYA."),
+ "telat": ("Kamu telat jemput lagi.", "Gitu aja marah.", "Maaf, harusnya kukabari.", "Makasih udah sabar.", "MENYEPELEKAN", "MENGAKUI", "BEDA CARA MINTA MAAFNYA."),
+ "malam": ("Aku masih marah soal tadi.", "Terserah. Aku pergi.", "Lanjut besok ya.", "Aku tetap di sini.", "PERGI", "BERTAHAN", "BEDA CARA BERTAHANNYA."),
+ "kritik": ("Caramu bicara bikin sakit.", "Kamu terlalu sensitif.", "Aku mau perbaiki ya.", "Makasih udah bilang.", "MENGEJEK", "MENERIMA", "BEDA CARA MENERIMANYA."),
+ "debat": ("Pendapatku beda sama kamu.", "Aku yang benar.", "Aku dengerin versimu.", "Kamu ada benarnya.", "MAU MENANG", "MAU MEMAHAMI", "BEDA CARA MENGHADAPINYA."),
+ "capek": ("Aku capek, butuh ngobrol.", "Aku juga capek!", "Sini, aku temani.", "Makasih udah ada.", "MELAMPIASKAN", "MENEMANI", "BEDA CARA MENEMANINYA."),
+ "ruang": ("Besok aku main sama teman.", "Terserah.", "Seru-seruan, kabarin ya.", "Makasih udah ngerti.", "TERSERAH", "MEMBERI RUANG", "BEDA CARA MEMBERI RUANG."),
+ "masalalu": ("Aku mau cerita masa laluku.", "Gak penting.", "Aku dengerin pelan-pelan.", "Makasih udah percaya.", "MENGABAIKAN", "MENDENGAR", "BEDA CARA MENDENGARNYA."),
+ "ultah": ("Kamu lupa ulang tahunku.", "Kan aku sibuk.", "Maaf. Aku tebus ya.", "Makasih udah bilang.", "MENGELAK", "MENEBUS", "BEDA CARA MENEBUSNYA."),
+ "sakit": ("Aku lagi gak enak badan.", "Minum obat aja.", "Kubawain bubur ya.", "Makasih udah peduli.", "MENYEPELEKAN", "MENEMANI", "BEDA CARA MEMEDULIKANNYA."),
+}
+KEY = os.environ.get("SCN")
+_S = SCN.get(KEY, ("Kamu akhir-akhir ini cuek.", "Perasaanmu aja.", "Ceritain. Aku dengerin.", "Makasih udah bilang.", "MENYANGKAL", "MENDENGAR", "BEDA CARA MENDENGARNYA."))
 OUT = sys.argv[1] if len(sys.argv) > 1 else "ab-pasangan.mp4"
 W, H, FPS, DUR, S = 1080, 1920, 30, 12, 2
 PW, PH = 1080, 600
@@ -155,14 +171,14 @@ def panel(t, which):
         d.rounded_rectangle([x * S, yy, x * S + w, yy + 62 * S], 22 * S, fill=fade(fill, a, BG_B), outline=fade(line, a, BG_B) if line else None, width=2 * S if line else 0)
         d.text((x * S + 22 * S, yy + 31 * S), txt, font=big, fill=fade(WHITE, a, BG_B), anchor="lm")
     a = seg(t, 1.0, 1.3) * (1 - seg(t, 4.4, 4.8))
-    if a > 0: bub(430, 60, "Kamu akhir-akhir ini cuek.", a, (36, 110, 190))
+    if a > 0: bub(430, 60, _S[0], a, (36, 110, 190))
     a = seg(t, 2.8, 3.1) * (1 - seg(t, 4.6, 5.0))
     if a > 0:
-        if A: bub(600, 135, "Perasaanmu aja.", a, (84, 46, 46), RED)
-        else: bub(520, 135, "Ceritain. Aku dengerin.", a, (36, 84, 60), GREEN)
+        if A: bub(600, 135, _S[1], a, (84, 46, 46), RED)
+        else: bub(520, 135, _S[2], a, (36, 84, 60), GREEN)
     if not A:
         a = seg(t, 6.0, 6.3) * (1 - seg(t, 7.2, 7.5))
-        if a > 0: bub(300, 100, "Makasih udah bilang.", a, (36, 110, 190))
+        if a > 0: bub(300, 100, _S[3], a, (36, 110, 190))
     else:
         a = seg(t, 9.6, 9.9)
         if a > 0: d.text((410 * S, 150 * S), "...", font=F(60 * S), fill=fade(GREY, a, BG_B), anchor="lm")
@@ -170,12 +186,12 @@ def panel(t, which):
     d.text((30 * S, 40 * S), "PASANGAN " + which, font=F(30 * S), fill=WHITE, anchor="lm")
     a = seg(t, 3.0, 3.4)
     if a > 0:
-        d.text((30 * S, 80 * S), "MENYANGKAL" if A else "MENDENGAR", font=F(22 * S), fill=fade(RED if A else GREEN, a, BG_T), anchor="lm")
+        d.text((30 * S, 80 * S), _S[4] if A else _S[5], font=F(22 * S), fill=fade(RED if A else GREEN, a, BG_T), anchor="lm")
     img = img.resize((PW, PH), Image.LANCZOS)
     # vignette tipis
     return img
 
-CAPS = [(1.0, 2.8, "Sama-sama dibilang: kamu cuek."), (3.0, 4.6, "A: \"Perasaanmu aja.\""), (4.6, 7.0, "A pergi. B duduk dan memeluk."),
+CAPS = [(1.0, 2.8, "Situasi sama, dua tanggapan."), (3.0, 4.6, "A: \"" + _S[1] + "\""), (4.6, 7.0, "A pergi. B duduk dan memeluk."),
         (7.0, 9.8, "Jam 01.42. Satu tidur, satu terjaga.")]
 
 def caption(img, t):
@@ -211,7 +227,7 @@ def frame(i):
             a = seg(t, a0, a0 + 0.4)
             if a > 0: text_c(d, (W / 2, y + 20 * (1 - a)), txt, font or F(80), fade(col, a), sp=sp)
         line("SAMA MASALAHNYA.", 820, 10.2, font=F(70))
-        line("BEDA CARA MENDENGARNYA.", 940, 10.5, col=GOLD, font=F(48))
+        line(_S[6], 940, 10.5, col=GOLD, font=F(min(48, int((1000 / len(_S[6]) - 5) / 0.6))))
         line("kamu yang mana? A atau B?", 1090, 11.0, col=GREY, font=F(34, False), sp=2)
     else:
         caption(img, t)
@@ -251,7 +267,7 @@ def build_audio(path, sr=44100):
 def work(a): i, tmp = a; frame(i).save(f"{tmp}/{i:04d}.png")
 
 if __name__ == "__main__":
-    tmp = os.path.dirname(os.path.abspath(OUT)) + "/_frames_ab"; os.makedirs(tmp, exist_ok=True)
+    tmp = os.path.dirname(os.path.abspath(OUT)) + "/_frames_ab_" + (KEY or "base"); os.makedirs(tmp, exist_ok=True)
     only = os.environ.get("ONLY")
     if only:
         for tt in only.split(","): frame(int(float(tt) * FPS)).save(f"{tmp}/_p{tt}.png")
