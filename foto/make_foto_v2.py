@@ -13,10 +13,10 @@ LIME, WHITE, GREY, RED = (206, 246, 62), (246, 246, 248), (176, 180, 190), (255,
 BRAND = "Animasiredflag"
 
 # ---------- latar: siluet monokrom + grain ----------
-def photo_bg(kind, seed):
+def photo_bg(kind, seed, light_at=(900, 140), dx=0):
     rng = np.random.default_rng(seed)
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    light = 52 + 82 * np.clip(1 - np.hypot(xx - 900, yy - 140) / 900, 0, 1) ** 1.2          # cahaya dari kanan atas
+    light = 52 + 82 * np.clip(1 - np.hypot(xx - light_at[0], yy - light_at[1]) / 900, 0, 1) ** 1.2          # cahaya dari kanan atas
     m = Image.new("L", (W, H), 0); d = ImageDraw.Draw(m)
     def person(cx, head_y, scale, tilt=0, bun=True):
         r = 86 * scale
@@ -26,13 +26,13 @@ def photo_bg(kind, seed):
         d.ellipse([cx - r * 2.2, head_y + r * 1.1, cx + r * 2.2, head_y + r * 3.4], fill=255)         # bahu
         d.rectangle([cx - r * 2.05, head_y + r * 2.2, cx + r * 2.05, H], fill=255)                  # badan
     if kind == 1:   # dua orang berdekatan, saling condong
-        person(700, 470, 1.0, tilt=14); person(900, 520, 0.95, tilt=-16, bun=False)
+        person(700 + dx, 470, 1.0, tilt=14); person(900 + dx, 520, 0.95, tilt=-16, bun=False)
     else:           # dua orang saling membelakangi, celah terang di tengah
-        person(660, 470, 1.0, tilt=-10); person(960, 470, 0.95, tilt=10, bun=False)
+        person(660 + dx, 470, 1.0, tilt=-10); person(960 + dx, 470, 0.95, tilt=10, bun=False)
     mk = np.asarray(m.filter(ImageFilter.GaussianBlur(4)), dtype=np.float32) / 255
     rim = np.clip(np.asarray(m.filter(ImageFilter.GaussianBlur(9)), dtype=np.float32) / 255 - mk, 0, 1)
     img = light * (1 - mk) + 18 * mk
-    if kind == 2: img += 90 * np.exp(-((xx - 810) / 36) ** 2) * (1 - mk)                         # celah cahaya
+    if kind == 2: img += 90 * np.exp(-((xx - (810 + dx)) / 36) ** 2) * (1 - mk)                         # celah cahaya
     img += 55 * np.asarray(Image.fromarray((rim * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(3)), dtype=np.float32) / 255
     for _ in range(5):                                                                          # bokeh
         cx, cy, r = rng.integers(500, 1080), rng.integers(40, 420), rng.integers(30, 80)
