@@ -66,9 +66,9 @@ class Ctx:
         self.hero_drawn = False
     def put_hero(self):
         if not self.hero_drawn: put(self.p, self.h["lay"]); self.hero_drawn = True
-    def dia(self, x, f=-1, walk=None, lit=0.0, face=None, arm_f=15, arm_b=-8, sit=0.0, alpha=1.0, lean=0.0, head=0.0):
+    def dia(self, x, f=-1, walk=None, lit=0.0, face=None, arm_f=15, arm_b=-8, sit=0.0, alpha=1.0, lean=0.0, head=0.0, sc=1.15):
         col = lerp_col(DIA, LIT, lit)
-        lay, _, hd = fig_layer(x, FLOOR, col, f=f, walk=walk, lean=lean, head=head, arm_f=arm_f, arm_b=arm_b, sit=sit, face=face)
+        lay, _, hd = fig_layer(x, FLOOR, col, f=f, walk=walk, lean=lean, head=head, arm_f=arm_f, arm_b=arm_b, sit=sit, face=face, sc=sc)
         hand = base.LAST_HAND
         put(self.p, lay, alpha)
         return hand, hd
@@ -665,9 +665,357 @@ def _():
         if 4.6 < t < 6.6: layer(c.p, lambda d: (RC(d, hd[0] - 34, hd[1] - 52, hd[0] + 34, hd[1] - 30, fill=(250, 240, 220), rad=8), TX(d, hd[0], hd[1] - 41, "maaf ya", 10, (40, 40, 50))))
     return dict(A=A, B=B)
 
+# ================================================================== SERI 2 (12 cerita)
+def bub(c, x, y, txt, tone="n", a=1.0, size=10):
+    col = {"n": (250, 246, 236), "r": (255, 214, 210), "w": (255, 232, 190)}[tone]
+    w = len(txt) * size * 0.62 + 18
+    layer(c.p, lambda d: (RC(d, x - w / 2, y - 13, x + w / 2, y + 13, fill=col, rad=10, a=255 * a), PG(d, [(x - 6, y + 12), (x + 4, y + 12), (x - 2, y + 22)], col, a=255 * a), TX(d, x, y, txt, size, (40, 40, 50), a=255 * a)), 1.0)
+
+# 18 jembatan
+@story("jembatan", title1="HUBUNGAN DIBANGUN BERDUA.", title2="JANGAN BIARKAN SATU SISI,",
+       la="DIA YANG DIAM DI SEBERANG", lb="DIA YANG IKUT MEMBANGUN",
+       at=[(0, ""), (2.1, "MEMBANGUN DARI SATU SISI."), (5.2, "JATUH."), (6.8, "DICOBA LAGI."), (8.4, "TETAP TIDAK SAMPAI."), (10.0, "LELAH SENDIRIAN.")],
+       bt=[(0, ""), (2.1, "MEMBANGUN DARI SATU SISI."), (4.6, "DIA IKUT MEMBANGUN."), (6.4, "BERTEMU DI TENGAH."), (8.3, "MENYEBERANG."), (9.4, "SAMPAI.")],
+       p1=[("BANGUN", AMBER)], p2=[("DARI DUA SISI.", WHITE)], s1="JEMBATAN SATU SISI", s2="TIDAK PERNAH SAMPAI.")
+def _():
+    G0, G1 = 220, 400
+    def gap(d): RC(d, G0, FLOOR - 1, G1, PH, fill=(6, 7, 14)); LN(d, [(G0, FLOOR), (G0, PH)], (90, 90, 104), 2); LN(d, [(G1, FLOOR), (G1, PH)], (90, 90, 104), 2)
+    def plank(d, i, dy=0): RC(d, G0 + i * 30, FLOOR - 4 + dy, G0 + i * 30 + 27, FLOOR + 6 + dy, fill=(176, 130, 80))
+    def A(c):
+        t = c.t
+        def fn(d):
+            gap(d)
+            for i, t0 in enumerate([2.6, 4.0, 5.6, 7.2]):
+                if t < t0: continue
+                fall = ease((t - (IMP[min(i, 2)] - 0.1)) / 0.8) if t > IMP[min(i, 2)] - 0.1 else 0
+                if fall < 1: plank(d, min(i, 1), fall * 140)
+        layer(c.p, fn)
+        hand, hd = c.dia(500, f=1, face="calm", sit=1.0, arm_f=60, head=0.25)
+        layer(c.p, lambda d: RC(d, hand[0] + 2, hand[1] - 9, hand[0] + 10, hand[1] + 5, fill=(170, 200, 255)))
+    def B(c):
+        t = c.t
+        def fn(d):
+            gap(d)
+            for i, t0 in enumerate([2.6, 4.0]):
+                if t > t0: plank(d, i)
+            for i, t0 in enumerate([4.6, 5.4, 6.2]):
+                if t > t0: plank(d, 5 - i)
+            if t > 6.4: plank(d, 2); plank(d, 3)
+        layer(c.p, fn)
+        x, mv, f = track([(0, 450), (8.0, 450), (9.2, 240)], t)
+        c.dia(x, f=-1, walk=t * 8 if mv else None, face="happy" if t > BURST else "calm", arm_f=60, lit=ease((t - 9.0) / 0.6))
+    return dict(A=A, B=B)
+
+# 19 kaca
+@story("kaca", title1="KEPERCAYAAN ITU KACA.", title2="JANGAN DIRETAKKAN,",
+       la="DIA YANG BERBOHONG", lb="DIA YANG JUJUR",
+       at=[(0, ""), (2.1, "AKU DI RUMAH KOK."), (5.2, "RETAK."), (6.8, "BOHONG KECIL LAGI."), (8.4, "PECAH."), (10.0, "SULIT PERCAYA.")],
+       bt=[(0, ""), (2.1, "AKU DI LUAR, PULANG JAM 9."), (4.6, "JUJUR, WALAU KECIL."), (6.4, "DIJAGA."), (8.3, "TETAP JERNIH."), (9.4, "PERCAYA.")],
+       p1=[("JAGA", AMBER)], p2=[("SELAGI UTUH.", WHITE)], s1="KACA YANG RETAK", s2="TIDAK PERNAH KEMBALI SAMA.")
+def _():
+    GX = 300
+    def pane(d, cracks, shine=0.0):
+        RC(d, GX - 34, FLOOR - 150, GX + 34, FLOOR - 10, fill=(150, 200, 240), out=(200, 220, 240), w=2.5, a=120)
+        LN(d, [(GX - 30, FLOOR - 10), (GX - 30, FLOOR)], (120, 120, 140), 3); LN(d, [(GX + 30, FLOOR - 10), (GX + 30, FLOOR)], (120, 120, 140), 3)
+        if cracks >= 1: LN(d, [(GX - 10, FLOOR - 140), (GX - 2, FLOOR - 110), (GX - 14, FLOOR - 90), (GX - 4, FLOOR - 60)], WHITE, 1.5)
+        if cracks >= 2: LN(d, [(GX - 2, FLOOR - 110), (GX + 24, FLOOR - 100), (GX + 12, FLOOR - 70)], WHITE, 1.5); LN(d, [(GX - 14, FLOOR - 90), (GX - 32, FLOOR - 70)], WHITE, 1.5)
+        if cracks >= 3: LN(d, [(GX - 4, FLOOR - 60), (GX + 20, FLOOR - 30), (GX + 30, FLOOR - 40)], WHITE, 1.5); LN(d, [(GX - 4, FLOOR - 60), (GX - 26, FLOOR - 24)], WHITE, 1.5)
+        if shine > 0: LN(d, [(GX - 20, FLOOR - 130), (GX + 10, FLOOR - 140)], WHITE, 3, a=255 * shine); LN(d, [(GX - 24, FLOOR - 112), (GX - 4, FLOOR - 118)], WHITE, 2, a=255 * shine)
+    def A(c):
+        t = c.t; n = sum(1 for m in IMP if t > m)
+        layer(c.p, lambda d: pane(d, n))
+        c.dia(430, f=-1, face="calm", arm_f=60)
+        if 2.0 < t < 4.6: bub(c, 430, 180, "aku di rumah kok", "n")
+        if 6.0 < t < 7.4: bub(c, 430, 180, "cuma teman", "n")
+    def B(c):
+        t = c.t; sh = 0.5 + 0.5 * math.sin(t * 3) if t > 6.4 else 0
+        if t > 6.4: paste_glow(c.p, GX, FLOOR - 80, 0.35)
+        layer(c.p, lambda d: pane(d, 0, sh))
+        c.dia(430, f=-1, face="happy" if t > BURST else "calm", arm_f=60, lit=ease((t - 9.0) / 0.6))
+        if 2.0 < t < 4.6: bub(c, 430, 180, "aku di luar, pulang jam 9", "w")
+    return dict(A=A, B=B)
+
+# 20 perahu
+@story("perahu", title1="HUBUNGAN ITU PERAHU.", title2="JANGAN DAYUNG SENDIRIAN,",
+       la="DIA YANG DUDUK SAJA", lb="DIA YANG IKUT MENDAYUNG",
+       at=[(0, ""), (2.1, "SATU PERAHU."), (5.2, "DIDAYUNG SENDIRI."), (6.8, "BERPUTAR."), (8.4, "TIDAK KE MANA-MANA."), (10.0, "CAPEK.")],
+       bt=[(0, ""), (2.1, "SATU PERAHU."), (4.6, "DIA IKUT MENDAYUNG."), (6.4, "BERGERAK."), (8.3, "MENUJU TERANG."), (9.4, "SAMPAI.")],
+       p1=[("DAYUNG", AMBER)], p2=[("BERDUA.", WHITE)], s1="SATU DAYUNG BERPUTAR.", s2="DUA DAYUNG SAMPAI.")
+def _():
+    def water(d, t):
+        RC(d, 0, FLOOR - 8, PW, PH, fill=(24, 40, 80))
+        for i in range(12): LN(d, [((i * 60 + t * 30) % 680 - 20, FLOOR + 6 + (i % 3) * 18), ((i * 60 + t * 30) % 680 + 10, FLOOR + 6 + (i % 3) * 18)], (70, 100, 160), 1.5)
+    def boat(d, x, rock): PG(d, [(x - 110, FLOOR - 26 + rock), (x + 110, FLOOR - 26 - rock), (x + 80, FLOOR + 4 - rock), (x - 80, FLOOR + 4 + rock)], (130, 92, 62))
+    def oar(d, sx, sy, t, on): a = 0.6 * math.sin(t * 5) if on else 0.2; LN(d, [(sx, sy), (sx + 40 * math.cos(1.2 + a), sy + 60 * math.sin(1.2 + a))], (200, 170, 120), 3)
+    def scene(c, bx, rock, partner_rows):
+        t = c.t
+        layer(c.p, lambda d: water(d, t))
+        layer(c.p, lambda d: boat(d, bx, rock))
+        hand, hd = c.dia(bx + 60, f=-1, face="happy" if (partner_rows and t > BURST) else "calm", sit=1.0, arm_f=70 if partner_rows else 20, lit=ease((t - 9.0) / 0.6) if partner_rows else 0)
+        if partner_rows: layer(c.p, lambda d: oar(d, hand[0], hand[1], t + 1, True))
+        hh = c.h["hand"]; layer(c.p, lambda d: oar(d, hh[0], hh[1], t, t > 2.0))
+    def A(c):
+        rock = 6 * math.sin(c.t * 2.2) * clamp((c.t - 4.0) / 2)
+        scene(c, 200, rock, False)
+    def B(c):
+        scene(c, 200, 2 * math.sin(c.t * 1.5), c.t > ACT)
+    return dict(A=A, B=B, hero_sit=1.0, hero_x=150)
+
+# 21 pintu
+def door2(d, x, op):
+    RC(d, x - 32, FLOOR - 156, x + 32, FLOOR, fill=(236, 214, 160) if op > 0.05 else (44, 46, 60), out=(90, 94, 110), w=2)
+    if op > 0.05: RC(d, x + 32 - 64 * (1 - op), FLOOR - 156, x + 32, FLOOR, fill=(52, 54, 70))
+    EL(d, x - 22, FLOOR - 76, 3, fill=(200, 200, 210))
+@story("pintu", title1="TERSERAH BUKAN JAWABAN.", title2="JANGAN TUTUP PINTUNYA,",
+       la="DIA YANG BILANG TERSERAH", lb="DIA YANG MENGAJAK BICARA",
+       at=[(0, ""), (2.1, "BAHAS YUK?"), (5.2, "TERSERAH."), (6.8, "PINTUNYA DITUTUP."), (8.4, "DIKETUK, TIDAK DIBUKA."), (10.0, "DI LUAR SENDIRIAN.")],
+       bt=[(0, ""), (2.1, "BAHAS YUK?"), (4.6, "PINTUNYA DIBUKA."), (6.4, "AYO BAHAS BARENG."), (8.3, "DUDUK BERDUA."), (9.4, "LEGA.")],
+       p1=[("BUKA", AMBER)], p2=[("PINTUNYA.", WHITE)], s1="TERSERAH ITU PINTU", s2="YANG DITUTUP PELAN.")
+def _():
+    DX = 420
+    def A(c):
+        t = c.t; op = 1.0 if t < IMP[0] else 1 - ease((t - IMP[0]) / 0.3)
+        if t < IMP[0]: c.dia(DX, f=-1, face="calm", arm_f=15)
+        layer(c.p, lambda d: door2(d, DX, op))
+        if 4.4 < t < 5.4: bub(c, DX, 170, "terserah", "r")
+        if t > 6.0:
+            def knock(d):
+                for m in IMP[1:]:
+                    u = (t - m) / 0.5
+                    if 0 <= u < 1: TX(d, DX - 50, FLOOR - 110 - 10 * u, "tok tok", 9, GREY, a=255 * (1 - u))
+            layer(c.p, knock)
+    def B(c):
+        t = c.t; op = 1 - ease((t - 1.0) / 0.3) if t < ACT else ease((t - ACT) / 0.5)
+        layer(c.p, lambda d: door2(d, DX, op))
+        if t > ACT:
+            x, mv, f = track([(ACT, DX), (6.0, DX), (7.4, 270)], t)
+            c.dia(x, f=-1, walk=t * 8 if mv else None, face="happy" if t > BURST else "calm", sit=ease((t - 8.0) / 0.6), arm_f=30, lit=ease((t - 9.0) / 0.6))
+            if 5.0 < t < 7.0: bub(c, x, 170, "ayo bahas bareng", "w")
+    return dict(A=A, B=B)
+
+# 22 kursi
+def chair(d, x):
+    RC(d, x - 20, FLOOR - 44, x + 20, FLOOR - 38, fill=(120, 96, 74)); RC(d, x + 14, FLOOR - 96, x + 20, FLOOR - 38, fill=(120, 96, 74))
+    LN(d, [(x - 16, FLOOR - 38), (x - 16, FLOOR)], (92, 74, 58), 4); LN(d, [(x + 16, FLOOR - 38), (x + 16, FLOOR)], (92, 74, 58), 4)
+@story("kursi", title1="WAKTU MENUNJUKKAN PRIORITAS.", title2="JANGAN BIARKAN KURSINYA KOSONG,",
+       la="DIA YANG SELALU TIDAK ADA", lb="DIA YANG MENYEMPATKAN",
+       at=[(0, ""), (2.1, "SENIN. MENUNGGU."), (5.2, "RABU. KOSONG."), (6.8, "SABTU. KOSONG."), (8.4, "MINGGU. KOSONG."), (10.0, "TERBIASA SENDIRI.")],
+       bt=[(0, ""), (2.1, "SENIN. MENUNGGU."), (4.6, "DIA DATANG."), (6.4, "WALAU SEBENTAR."), (8.3, "DUDUK BERSAMA."), (9.4, "CUKUP.")],
+       p1=[("ISI", AMBER)], p2=[("KURSI KOSONGNYA.", WHITE)], s1="SIBUK ITU NYATA.", s2="MENYEMPATKAN ITU PILIHAN.")
+def _():
+    def A(c):
+        t = c.t; layer(c.p, lambda d: (chair(d, 160), chair(d, 230)))
+        x = (t * 90) % 900 - 100
+        if t > 2.0:
+            hand, _ = c.dia(x if x < 760 else 760, f=1, walk=t * 8, face="calm", arm_f=60, head=0.25, alpha=0.55)
+            layer(c.p, lambda d: RC(d, hand[0] + 2, hand[1] - 9, hand[0] + 10, hand[1] + 5, fill=(170, 200, 255)), 0.6)
+    def B(c):
+        t = c.t; layer(c.p, lambda d: (chair(d, 160), chair(d, 230)))
+        x, mv, f = track([(0, 700), (3.6, 700), (ACT + 0.8, 232)], t)
+        c.dia(x, f=-1, walk=t * 8 if mv else None, face="happy" if t > BURST else "calm", sit=ease((t - (ACT + 0.8)) / 0.5), arm_f=30, lit=ease((t - 9.0) / 0.6))
+    return dict(A=A, B=B, hero_sit=1.0, hero_x=158)
+
+# 23 kunci
+def padlock(d, x, y, open_=0.0, crack=0):
+    RC(d, x - 22, y - 18, x + 22, y + 22, fill=(230, 180, 80), rad=5)
+    d.arc([(x - 15) * S, (y - 46 - 14 * open_) * S, (x + 15) * S, (y - 14 - 14 * open_) * S], 180, 360, fill=C4((200, 200, 210)), width=int(5 * S))
+    LN(d, [(x - 15, y - 30 - 14 * open_), (x - 15, y - 18)], (200, 200, 210), 5)
+    if open_ < 0.5: LN(d, [(x + 15, y - 30), (x + 15, y - 18)], (200, 200, 210), 5)
+    EL(d, x, y + 2, 4, fill=(60, 50, 30))
+    if crack: LN(d, [(x - 6, y - 16), (x + 2, y - 2), (x - 4, y + 10), (x + 6, y + 20)], (60, 40, 20), 1.8)
+@story("kunci", title1="YANG TEPAT TIDAK MEMAKSA.", title2="JANGAN PAKSA KUNCINYA,",
+       la="DIA YANG MEMAKSA BERUBAH", lb="DIA YANG MENERIMA",
+       at=[(0, ""), (2.1, "KAMU HARUS BERUBAH."), (5.2, "DIPAKSA."), (6.8, "DIPAKSA LAGI."), (8.4, "RUSAK."), (10.0, "BUKAN DIRI SENDIRI.")],
+       bt=[(0, ""), (2.1, "INI AKU APA ADANYA."), (4.6, "DICOBA PELAN."), (6.4, "PAS."), (8.3, "TERBUKA."), (9.4, "DITERIMA.")],
+       p1=[("YANG PAS", AMBER)], p2=[("TIDAK DIPAKSA.", WHITE)], s1="KALAU HARUS DIPAKSA,", s2="ITU BUKAN KUNCINYA.")
+def _():
+    LX, LY = 300, FLOOR - 90
+    def key(d, x, y, bent=0.0, col=(220, 220, 230)):
+        EL(d, x + 26, y, 8, out=col, w=3); LN(d, [(x + 18, y), (x - 10, y + 12 * bent)], col, 3); LN(d, [(x - 4, y + 7 * bent), (x - 4, y + 7 * bent + 6)], col, 2)
+    def A(c):
+        t = c.t; crack = 1 if t > IMP[2] else 0
+        jab = sum(pulse(t - m, 0.5) for m in IMP)
+        layer(c.p, lambda d: padlock(d, LX, LY, 0, crack))
+        hand, _ = c.dia(400, f=-1, face="hit" if jab > 0.1 else "calm", arm_f=80 + 10 * jab)
+        bent = clamp(sum(ease((t - m) / 0.3) for m in IMP) / 3)
+        layer(c.p, lambda d: key(d, LX + 24 - 10 * jab, LY + 2, bent))
+        for m in IMP: sparks(c.p, LX + 10, LY, t - m)
+    def B(c):
+        t = c.t; op = ease((t - 6.4) / 0.6)
+        if op > 0.5: paste_glow(c.p, LX, LY, 0.5)
+        layer(c.p, lambda d: padlock(d, LX, LY, op))
+        c.dia(400, f=-1, face="happy" if t > BURST else "calm", arm_f=80, lit=ease((t - 9.0) / 0.6))
+        if t < 7.4: layer(c.p, lambda d: key(d, LX + 24 - 12 * ease((t - ACT) / 1.4), LY + 2, 0, GOLD))
+    return dict(A=A, B=B)
+
+# 24 kacamata
+def flower(d, x, y, col):
+    LN(d, [(x, y), (x, y + 26)], (90, 170, 100), 2.5)
+    for i in range(5): a = i * 2 * math.pi / 5; EL(d, x + 7 * math.cos(a), y + 7 * math.sin(a), 5, fill=col)
+    EL(d, x, y, 4, fill=(255, 220, 90))
+@story("kacamata", title1="EGO ITU KACAMATA GELAP.", title2="SEMUA TERLIHAT SALAH,",
+       la="DIA YANG BERKACAMATA GELAP", lb="DIA YANG MELEPASNYA",
+       at=[(0, ""), (2.1, "MEMBERI YANG TERBAIK."), (5.2, "DIANGGAP KURANG."), (6.8, "DIANGGAP SALAH."), (8.4, "SEMUA GELAP."), (10.0, "TIDAK TERLIHAT.")],
+       bt=[(0, ""), (2.1, "MEMBERI YANG TERBAIK."), (4.6, "KACAMATANYA DILEPAS."), (6.4, "TERLIHAT JELAS."), (8.3, "DIHARGAI."), (9.4, "BERWARNA.")],
+       p1=[("LEPAS", AMBER)], p2=[("KACAMATANYA.", WHITE)], s1="EGO MEMBUAT SEMUA", s2="TERLIHAT GELAP.")
+def _():
+    def glasses(d, hd, f):
+        x, y = hd[0] + f * 6, hd[1] - 3
+        RC(d, x - 11, y - 4, x - 1, y + 4, fill=(10, 10, 14), rad=2); RC(d, x + 1, y - 4, x + 11, y + 4, fill=(10, 10, 14), rad=2)
+    def A(c):
+        t = c.t; dark = clamp(sum(ease((t - m) / 0.5) for m in IMP) / 3)
+        hand, hd = c.dia(400, f=-1, face="calm", arm_f=15)
+        layer(c.p, lambda d: glasses(d, hd, -1))
+        hh = c.h["hand"]; col = lerp_col((255, 120, 160), (70, 70, 80), dark)
+        layer(c.p, lambda d: flower(d, hh[0] + 10, hh[1] - 20, col))
+    def B(c):
+        t = c.t; off = ease((t - ACT) / 0.6)
+        hand, hd = c.dia(400, f=-1, face="happy" if t > 6.4 else "calm", arm_f=lerp(15, 150, pulse(t - ACT, 1.2) * 1.5), lit=ease((t - 9.0) / 0.6))
+        if off < 1: layer(c.p, lambda d: glasses(d, (hd[0], hd[1] - 30 * off), -1))
+        hh = c.h["hand"]
+        if t > 6.4: paste_glow(c.p, hh[0] + 10, hh[1] - 20, 0.3)
+        layer(c.p, lambda d: flower(d, hh[0] + 10, hh[1] - 20, (255, 120, 160)))
+    return dict(A=A, B=B)
+
+# 25 selimut
+def snow(c, k):
+    t = c.t; n = int(36 * clamp(k))
+    def fn(d):
+        for j in range(n):
+            x = (j * 47 + 13 + 10 * math.sin(t + j)) % PW; y = (t * 40 + j * 61) % (PH + 10) - 5
+            EL(d, x, y, 1.8, fill=(220, 230, 255), a=200)
+    layer(c.p, fn)
+@story("selimut", title1="SAAT DIA SEDANG SEDIH,", title2="JANGAN CUMA MENASIHATI,",
+       la="DIA YANG MENCERAMAHI", lb="DIA YANG MEMELUK",
+       at=[(0, ""), (2.1, "SEDANG RAPUH."), (5.2, "HARUSNYA KAMU..."), (6.8, "MAKANYA, DULU..."), (8.4, "MAKIN DINGIN."), (10.0, "SENDIRIAN.")],
+       bt=[(0, ""), (2.1, "SEDANG RAPUH."), (4.6, "DIA MENDEKAT."), (6.4, "DISELIMUTI."), (8.3, "DIPELUK."), (9.4, "HANGAT.")],
+       p1=[("PELUK", AMBER)], p2=[("DULU.", WHITE)], s1="NASIHAT BISA MENUNGGU.", s2="PELUKAN JANGAN.")
+def _():
+    def A(c):
+        t = c.t; snow(c, 0.4 + 0.25 * sum(ease((t - m) / 0.6) for m in IMP))
+        c.dia(440, f=-1, face="calm", arm_f=15 + 100 * sum(pulse(t - m, 0.6) for m in IMP))
+        if 4.6 < t < 5.9: bub(c, 440, 170, "harusnya kamu...", "r")
+        if 6.2 < t < 7.6: bub(c, 440, 170, "makanya, dulu...", "r")
+    def B(c):
+        t = c.t; snow(c, 0.4 * (1 - ease((t - 6.4) / 1.0)))
+        x, mv, f = track([(0, 440), (ACT, 440), (6.2, 200)], t)
+        c.dia(x, f=-1, walk=t * 8 if mv else None, face="happy" if t > BURST else "calm", sit=ease((t - 6.2) / 0.5), arm_f=110 if t > 6.4 else 15, lit=ease((t - 9.0) / 0.6))
+        if t > 6.4:
+            hx = c.h["x"]
+            layer(c.p, lambda d: PG(d, [(hx - 30, FLOOR - 70), (hx + 70, FLOOR - 74), (hx + 76, FLOOR - 4), (hx - 36, FLOOR - 4)], (170, 120, 150), a=230 * ease((t - 6.4) / 0.5)))
+    return dict(A=A, B=B, hero_sit=1.0, hero_face="sad")
+
+# 26 rindu (jarak)
+@story("rindu", title1="JARAK DIUJI WAKTU.", title2="JANGAN BIARKAN JAMNYA BERHENTI,",
+       la="DIA YANG MENGHILANG", lb="DIA YANG KONSISTEN",
+       at=[(0, ""), (2.1, "BEDA KOTA."), (5.2, "SEHARI TANPA KABAR."), (6.8, "SEMINGGU."), (8.4, "JAMNYA BERHENTI."), (10.0, "JAUH SEKALI.")],
+       bt=[(0, ""), (2.1, "BEDA KOTA."), (4.6, "PAGI: KABAR."), (6.4, "MALAM: TELEPON."), (8.3, "SETIAP HARI."), (9.4, "DEKAT.")],
+       p1=[("KONSISTEN", AMBER)], p2=[("MENGALAHKAN JARAK.", WHITE)], s1="JARAK TIDAK MEMISAHKAN.", s2="DIAM YANG MEMISAHKAN.")
+def _():
+    def clock(d, x, y, ang, stopped):
+        EL(d, x, y, 34, fill=(30, 34, 50), out=(200, 200, 215), w=2.5)
+        LN(d, [(x, y), (x + 22 * math.sin(ang), y - 22 * math.cos(ang))], (230, 230, 240), 2.5); LN(d, [(x, y), (x + 14 * math.sin(ang * 0.08), y - 14 * math.cos(ang * 0.08))], (230, 230, 240), 3)
+        if stopped: TX(d, x, y + 48, "berhenti", 8, GREY)
+    def A(c):
+        t = c.t; stop = t > IMP[2]
+        ang = min(t, IMP[2]) * lerp(2.5, 0.3, clamp((t - 4) / 4))
+        layer(c.p, lambda d: clock(d, 320, 150, ang, stop))
+        c.dia(560, f=-1, face="calm", sc=0.8 if False else 1.15, alpha=lerp(0.8, 0.0, clamp(sum(ease((t - m) / 0.6) for m in IMP) / 3)))
+        hh = c.h["hand"]; layer(c.p, lambda d: RC(d, hh[0] + 2, hh[1] - 9, hh[0] + 10, hh[1] + 5, fill=(50, 54, 70)))
+    def B(c):
+        t = c.t
+        layer(c.p, lambda d: clock(d, 320, 150, t * 2.5, False))
+        hh = c.h["hand"]; ring = any(0 < t - m < 0.9 for m in (ACT, 6.4, 8.3))
+        layer(c.p, lambda d: RC(d, hh[0] + 2, hh[1] - 9, hh[0] + 10, hh[1] + 5, fill=(170, 200, 255) if ring or t > 9 else (50, 54, 70)))
+        if ring: paste_glow(c.p, hh[0] + 6, hh[1] - 2, 0.4)
+        x, mv, f = track([(0, 560), (8.4, 560), (9.3, 240)], t)
+        c.dia(x, f=-1, walk=t * 10 if mv else None, face="happy" if t > BURST else "calm", arm_f=60 if t < 8.4 else 40, lit=ease((t - 9.0) / 0.6), alpha=0.8 if t < 8.4 else 1.0)
+    return dict(A=A, B=B)
+
+# 27 pujian
+@story("pujian", title1="KATA BISA MENUMBUHKAN.", title2="JANGAN CUMA MENCELA,",
+       la="DIA YANG MENCELA", lb="DIA YANG MEMUJI",
+       at=[(0, ""), (2.1, "SUDAH BERUSAHA."), (5.2, "GITU AJA?"), (6.8, "MASIH KURANG."), (8.4, "LAYU SEMUA."), (10.0, "BERHENTI MENCOBA.")],
+       bt=[(0, ""), (2.1, "SUDAH BERUSAHA."), (4.6, "MAKASIH YA."), (6.4, "KAMU HEBAT."), (8.3, "TUMBUH SEMUA."), (9.4, "SEMANGAT.")],
+       p1=[("PUJI", AMBER)], p2=[("YANG KECIL.", WHITE)], s1="SATU PUJIAN", s2="MENUMBUHKAN BANYAK KEBAIKAN.")
+def _():
+    def row(d, k, wilt):
+        for i in range(6):
+            x = 60 + i * 95
+            if i / 6 < k:
+                if wilt > 0.5: LN(d, [(x, FLOOR), (x + 10, FLOOR - 16), (x + 22, FLOOR - 10)], (140, 120, 70), 2.5)
+                else: flower(d, x, FLOOR - 26, (255, 130, 170) if i % 2 else (255, 200, 120))
+    def A(c):
+        t = c.t; wilt = 1 if t > IMP[1] else 0
+        layer(c.p, lambda d: row(d, 0.5, wilt))
+        hand, _ = c.dia(430, f=-1, face="calm", arm_f=15 + 120 * sum(pulse(t - (m - 0.4), 0.6) for m in IMP))
+        def rocks(d):
+            for m in IMP:
+                u = (t - (m - 0.4)) / 0.4
+                if 0 <= u < 1: x, y = arc_pt(hand, (c.h["x"] + 10, c.h["hd"][1] + 30), ease(u), 30); EL(d, x, y, 6, fill=(110, 110, 120))
+        layer(c.p, rocks)
+        if 4.6 < t < 5.8: bub(c, 430, 170, "gitu aja?", "r")
+    def B(c):
+        t = c.t; k = clamp(0.2 + ease((t - ACT) / 4.5))
+        layer(c.p, lambda d: row(d, k, 0))
+        hand, _ = c.dia(400, f=-1, face="happy" if t > BURST else "calm", arm_f=90 if ACT < t < 6.0 else 30, lit=ease((t - 9.0) / 0.6))
+        if ACT < t < 6.0: layer(c.p, lambda d: flower(d, hand[0] - 6, hand[1] - 22, (255, 130, 170)))
+        if 6.2 < t < 7.6: bub(c, 400, 170, "kamu hebat", "w")
+    return dict(A=A, B=B)
+
+# 28 kembang api (love bombing)
+@story("kembangapi", title1="TERLALU MANIS DI AWAL?", title2="JANGAN TERTIPU KEMBANG API,",
+       la="DIA YANG MERIAH DI AWAL", lb="DIA YANG KONSISTEN",
+       at=[(0, ""), (2.1, "HADIAH. PUJIAN. JANJI."), (5.2, "LALU REDUP."), (6.8, "MENJAUH."), (8.4, "GELAP."), (10.0, "BINGUNG.")],
+       bt=[(0, ""), (2.1, "SEDERHANA SAJA."), (4.6, "TAPI SETIAP HARI."), (6.4, "TETAP ADA."), (8.3, "MAKIN TERANG."), (9.4, "TENANG.")],
+       p1=[("PILIH", AMBER)], p2=[("YANG KONSISTEN.", WHITE)], s1="KEMBANG API CEPAT PADAM.", s2="LILIN MENYALA LAMA.")
+def _():
+    def burst_(d, x, y, u, col):
+        for i in range(14):
+            a = i * 2 * math.pi / 14; r = 10 + 60 * u
+            EL(d, x + r * math.cos(a), y + r * math.sin(a) + 20 * u * u, 2.6, fill=col, a=255 * (1 - u))
+    def A(c):
+        t = c.t
+        def fn(d):
+            for i, (t0, x, y, col) in enumerate([(1.6, 260, 120, (255, 120, 160)), (2.4, 420, 90, (120, 200, 255)), (3.2, 330, 140, (255, 210, 90)), (4.0, 480, 130, (180, 140, 255))]):
+                u = (t - t0) / 1.2
+                if 0 <= u < 1: burst_(d, x, y, u, col)
+        layer(c.p, fn)
+        if 1.6 < t < 4.8: paste_glow(c.p, 360, 140, 0.4)
+        x, mv, f = track([(0, 330), (IMP[1], 330), (IMP[2], 640)], t)
+        c.dia(x, f=-1 if t < IMP[1] else 1, walk=t * 8 if mv else None, face="happy" if t < 5 else "calm", arm_f=150 if t < 4.6 else 15)
+    def B(c):
+        t = c.t; k = clamp(0.3 + ease((t - 2.0) / 7.0))
+        paste_glow(c.p, 330, FLOOR - 70, 0.3 + 0.6 * k)
+        layer(c.p, lambda d: (RC(d, 324, FLOOR - 60, 336, FLOOR - 30, fill=(240, 240, 250)), PG(d, [(330, FLOOR - 76 - 6 * math.sin(t * 12)), (325, FLOOR - 62), (335, FLOOR - 62)], (255, 200, 80))))
+        c.dia(420, f=-1, face="happy" if t > BURST else "calm", arm_f=30, lit=ease((t - 9.0) / 0.6))
+    return dict(A=A, B=B)
+
+# 29 pamit (ghosting)
+@story("pamit", title1="PERGI ITU HAK SEMUA ORANG.", title2="TAPI JANGAN MENGHILANG,",
+       la="DIA YANG MENGHILANG", lb="DIA YANG PAMIT",
+       at=[(0, ""), (2.1, "MASIH BERSAMA."), (5.2, "MULAI SAMAR."), (6.8, "TIDAK ADA KABAR."), (8.4, "HILANG."), (10.0, "PENUH TANDA TANYA.")],
+       bt=[(0, ""), (2.1, "MASIH BERSAMA."), (4.6, "AKU PAMIT YA."), (6.4, "MAKASIH UNTUK SEMUANYA."), (8.3, "PERGI DENGAN JELAS."), (9.4, "SEDIH, TAPI TENANG.")],
+       p1=[("PAMIT", AMBER)], p2=[("DENGAN JELAS.", WHITE)], s1="YANG PERGI BAIK-BAIK", s2="TIDAK MENINGGALKAN TANDA TANYA.")
+def _():
+    def A(c):
+        t = c.t; fade_ = clamp(sum(ease((t - m) / 0.7) for m in IMP) / 3)
+        c.dia(330, f=-1, face="calm", arm_f=15, alpha=1 - fade_)
+        if t > IMP[2]:
+            def q(d):
+                for i in range(3): TX(d, 300 + i * 30, 230 - 8 * math.sin(t * 4 + i), "?", 16, GREY)
+            layer(c.p, q)
+    def B(c):
+        t = c.t
+        x, mv, f = track([(0, 330), (7.6, 330), (9.4, 700)], t)
+        c.dia(x, f=-1 if t < 7.6 else 1, walk=t * 7 if mv else None, face="calm", arm_f=150 if 6.4 < t < 7.4 else 30)
+        if 4.6 < t < 6.2: bub(c, 330, 170, "aku pamit ya", "w")
+        if 6.3 < t < 7.6: bub(c, 330, 170, "makasih untuk semuanya", "w")
+    return dict(A=A, B=B, b_hero_face="calm")
+
 # ------------------------------------------------------------------ mesin panel
 def hero_state(t, A, st):
-    x = 150
+    x = st.get("hero_x", 150)
     if A:
         hit = sum(pulse(t - m) for m in IMP)
         r = sum(ease((t - (m + 0.15)) / 1.0) for m in IMP)
