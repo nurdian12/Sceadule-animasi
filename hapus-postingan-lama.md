@@ -1,53 +1,31 @@
-# Postingan lama di Facebook Animasiredflag (19–24 Nov) untuk dihapus manual
+# Postingan lama di Facebook Animasiredflag dengan tayangan di bawah 100
 
-Repliz hanya bisa menghapus jadwal, bukan postingan yang sudah terbit di Facebook. Hapus lewat Facebook / Meta Business Suite → Konten → Postingan & reel.
+Data tayangan diambil 25 Nov 2026 dari badge Reels Facebook. Repliz tidak bisa menghapus postingan yang sudah terbit, jadi hapus lewat Facebook / Meta Business Suite → Konten → Postingan & reel (buka link → titik tiga → Hapus).
 
-## A. Buatan seri ini, gaya lama (27 postingan)
+## A. Seri ini, gaya lama (7 reel)
 
-1. 19 Nov 06.30 WIB — https://www.facebook.com/1498227313364698/posts/122102138703551905
-2. 19 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122101945701551905
-3. 19 Nov 16.00 WIB — https://www.facebook.com/1498227313364698/posts/122102071593551905
-4. 19 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122102262771551905
-5. 19 Nov 21.00 WIB — https://www.facebook.com/1498227313364698/posts/122102352435551905
-6. 20 Nov 03.32 WIB — https://www.facebook.com/1498227313364698/posts/122102612967551905
-7. 20 Nov 06.30 WIB — https://www.facebook.com/1498227313364698/posts/122102710725551905
-8. 20 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122102928645551905
-9. 20 Nov 16.00 WIB — https://www.facebook.com/1498227313364698/posts/122103068631551905
-10. 20 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122103232083551905
-11. 20 Nov 21.00 WIB — https://www.facebook.com/1498227313364698/posts/122103294009551905
-12. 21 Nov 06.30 WIB — https://www.facebook.com/1498227313364698/posts/122103623181551905
-13. 21 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122103777261551905
-14. 21 Nov 16.00 WIB — https://www.facebook.com/1498227313364698/posts/122103903105551905
-15. 21 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122104029789551905
-16. 21 Nov 21.00 WIB — https://www.facebook.com/1498227313364698/posts/122104091403551905
-17. 22 Nov 06.30 WIB — https://www.facebook.com/1498227313364698/posts/122104489509551905
-18. 22 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122104699293551905
-19. 22 Nov 16.00 WIB — https://www.facebook.com/1498227313364698/posts/122104834479551905
-20. 22 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122104983783551905
-21. 22 Nov 21.00 WIB — https://www.facebook.com/1498227313364698/posts/122105049513551905
-22. 23 Nov 06.30 WIB — https://www.facebook.com/1498227313364698/posts/122105411049551905
-23. 23 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122105584209551905
-24. 23 Nov 16.00 WIB — https://www.facebook.com/1498227313364698/posts/122105751009551905
-25. 23 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122105899371551905
-26. 24 Nov 12.30 WIB — https://www.facebook.com/1498227313364698/posts/122106548097551905
-27. 24 Nov 19.30 WIB — https://www.facebook.com/1498227313364698/posts/122106858921551905
+| Terbit (WIB) | Video | Tayangan | Link |
+|---|---|---|---|
+| 20 Nov 06.30 | green flag sederhana (ulangan) | 1 | https://www.facebook.com/reel/1479964080894919 |
+| 20 Nov 12.30 | green flag minta maaf | 4 | https://www.facebook.com/reel/1197752186562266 |
+| 21 Nov 12.30 | seen doang | 1 | https://www.facebook.com/reel/1045781528556467 |
+| 21 Nov 19.30 | ghosting | 0 | https://www.facebook.com/reel/2681250035642010 |
+| 22 Nov 12.30 | jadilah rumah | 0 | https://www.facebook.com/reel/1133828079471250 |
+| 23 Nov 12.30 | A vs B chat (versi kamar) | 4 | https://www.facebook.com/reel/1813161906397796 |
+| 23 Nov 16.00 | A vs B cuek (dua kolom) | 10 | https://www.facebook.com/reel/1758088258623854 |
 
-## B. Dari otomasi lain di akun yang sama (17 postingan) — belum diminta dihapus, cek dulu
+## B. Dari otomasi lain di akun yang sama (9 reel)
 
-1. 19 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122101798629551905
-2. 19 Nov 12.00 WIB — https://www.facebook.com/1498227313364698/posts/122101932705551905
-3. 19 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122102208447551905
-4. 20 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122102726781551905
-5. 20 Nov 12.00 WIB — https://www.facebook.com/1498227313364698/posts/122102913567551905
-6. 20 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122103209073551905
-7. 21 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122104118751551905
-8. 21 Nov 12.00 WIB — https://www.facebook.com/1498227313364698/posts/122103764091551905
-9. 21 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122104014477551905
-10. 22 Nov 12.00 WIB — https://www.facebook.com/1498227313364698/posts/122104680561551905
-11. 22 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122104964697551905
-12. 23 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122105437155551905
-13. 23 Nov 12.00 WIB — https://www.facebook.com/1498227313364698/posts/122105564307551905
-14. 23 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122105878311551905
-15. 24 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122106363477551905
-16. 24 Nov 19.00 WIB — https://www.facebook.com/1498227313364698/posts/122106836043551905
-17. 25 Nov 07.00 WIB — https://www.facebook.com/1498227313364698/posts/122107371321551905
+| Terbit (WIB) | Judul | Tayangan | Link |
+|---|---|---|---|
+| 19 Nov 12.04 | Ghosting: menghilang bukan berarti kamu kurang | 0 (data 21 Nov) | https://www.facebook.com/1498227313364698/posts/122101932705551905 |
+| 20 Nov 07.01 | Echo Chamber | 0 | https://www.facebook.com/reel/1914105563336889 |
+| 20 Nov 12.05 | Lembur Tanpa Bayaran | 1 | https://www.facebook.com/reel/988935383801408 |
+| 21 Nov 12.04 | Doomscrolling | 4 | https://www.facebook.com/reel/1772206063856600 |
+| 22 Nov 07.02 | Word Salad | 0 | https://www.facebook.com/reel/3517231788447800 |
+| 22 Nov 12.06 | Batas Sehat | 2 | https://www.facebook.com/reel/4499761396954766 |
+| 23 Nov 12.04 | Kreditmu Dicuri | 3 | https://www.facebook.com/reel/1126126763390615 |
+| 23 Nov 19.05 | Flying Monkeys | 9 | https://www.facebook.com/reel/1467147532279697 |
+| 24 Nov 19.06 | Rapat yang Seharusnya Email | 0 | https://www.facebook.com/reel/2244895202723121 |
+
+Catatan: foto "5 ciri pasangan yang sehat" (24 Nov) tidak punya angka tayangan publik, jadi tidak dimasukkan.
