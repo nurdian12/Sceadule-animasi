@@ -1068,12 +1068,14 @@ def fit_font(d, segs, maxw=660):
 def render(st, t):
     fr = Image.new("RGB", (W, H), (0, 0, 0)); d = ImageDraw.Draw(fr)
     dim = 1 - 0.65 * ease((t - 12.0) / 0.8)
-    l1 = st["title1"]; spaced(d, l1, W / 2, 84, F_TITLE, scale_col(WHITE, dim), nchars=int(len(l1) * clamp((t - 0.2) / 1.4) + 0.999))
+    HF = font(34)                                   # hook besar, langsung terlihat sejak frame pertama
+    l1 = st["title1"]; hf = HF if len(l1) <= 24 else font(30)
+    spaced(d, l1, W / 2, 96, hf, scale_col(WHITE, dim), nchars=int(len(l1) * clamp((t - 0.0) / 0.12) + 0.999))
     if t >= 10.0:
-        l2 = st["title2"]; tf = F_TITLE if len(l2) <= 26 else font(24)
-        spaced(d, l2, W / 2, 126, tf, scale_col(WHITE, dim), nchars=int(len(l2) * clamp((t - 10.0) / 1.3) + 0.999))
+        l2 = st["title2"]; tf = font(26) if len(l2) <= 26 else font(22)
+        spaced(d, l2, W / 2, 142, tf, scale_col(WHITE, dim), nchars=int(len(l2) * clamp((t - 10.0) / 1.3) + 0.999))
     fade_end = clamp((DUR - t) / 0.5)
-    k = ease(t / 0.8) * lerp(1.0, 0.10, ease((t - 12.0) / 0.8)) * fade_end
+    k = ease(t / 0.12) * lerp(1.0, 0.10, ease((t - 12.0) / 0.8)) * fade_end
     black = Image.new("RGB", (PW, PH), (0, 0, 0))
     pa = finish_panel(panel(st, t, "A"), st["la"], st["at"], t, BLUE)
     pb = finish_panel(panel(st, t, "B"), st["lb"], st["bt"], t, (170, 180, 200), AMBER, BURST)
@@ -1081,11 +1083,14 @@ def render(st, t):
     pu = ease((t - 12.6) / 0.6) * fade_end
     if pu > 0:
         f1, f2 = fit_font(d, st["p1"]), fit_font(d, st["p2"]); fp = f1 if f1.size < f2.size else f2
-        spaced_multi(d, st["p1"], W / 2, 600, fp, alpha=pu); spaced_multi(d, st["p2"], W / 2, 672, fp, alpha=pu)
-    su = ease((t - 14.6) / 0.8) * fade_end
-    if su > 0:
-        spaced(d, st["s1"], W / 2, 1000, F_SUB, scale_col(GREY, su), sp=2); spaced(d, st["s2"], W / 2, 1038, F_SUB, scale_col(GREY, su), sp=2)
-    fade = clamp(1 - t / 0.4)
+        spaced_multi(d, st["p1"], W / 2, 560, fp, alpha=pu); spaced_multi(d, st["p2"], W / 2, 632, fp, alpha=pu)
+    su = ease((t - 14.2) / 0.8) * fade_end
+    if su > 0:                                      # tetap di atas zona UI Facebook (bawah ~20%)
+        spaced(d, st["s1"], W / 2, 860, F_SUB, scale_col(GREY, su), sp=2); spaced(d, st["s2"], W / 2, 898, F_SUB, scale_col(GREY, su), sp=2)
+    cu = ease((t - 16.4) / 0.6) * fade_end         # ajakan komentar di detik-detik akhir
+    if cu > 0:
+        spaced(d, "KAMU YANG MANA? TULIS A ATAU B.", W / 2, 975, font(21), scale_col(AMBER, cu), sp=2)
+    fade = clamp(1 - t / 0.2)
     if fade > 0: fr = Image.blend(fr, Image.new("RGB", (W, H), (0, 0, 0)), fade)
     return fr
 
